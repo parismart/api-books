@@ -1,8 +1,9 @@
-from flask import Flask, g
+from flask import Flask, g, jsonify
 import psycopg2
 
 app = Flask(__name__)
 
+# Configuración de la conexión a la base de datos
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
@@ -21,6 +22,7 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+# Ruta para la página de inicio
 @app.route('/', methods=['GET'])
 def home():
     conn = get_db()
@@ -37,4 +39,24 @@ def home():
     <p>Esta es una API que contiene {num_libros} libros.</p>"""
 
     return home_display
+
+
+# 1.Ruta para obtener todos los libros
+
+@app.route('/books', methods=['GET '])
+def get_books():
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM books_table")
+    books = cursor.fetchall()
+
+    cursor.close()
+
+    return jsonify(books)
+
+
+
+# Ejecutar la aplicación
+if __name__ == '__main__':
+    app.run(debug=True)
 
