@@ -2,7 +2,7 @@ from flask import Flask, g, jsonify, request
 import psycopg2
 
 
-app = Flask('__main__')
+app = Flask(__name__)
 
 # Configuración de la conexión a la base de datos
 def get_db():
@@ -111,5 +111,6 @@ def update_book():
 # y no tiene la intención de ser reutilizado como un módulo en otro lugar, entonces no necesitas necesariamente utilizar esta línea de código.
 
 # Ejecutar la aplicación
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
 
